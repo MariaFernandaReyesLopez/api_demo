@@ -19,7 +19,7 @@ class Alumnos:
     def GET(self):
         try:
             data = web.input()  # recibe los datos por la url
-            if data['token'] == "1234":  # valida el token que se recibe por url
+            if data['token'] == "2468":  # valida el token que se recibe por url
                 if data['action'] == 'get':  # evalua la acción a realizar
                     result = self.actionGet(self.app_version, self.file)  # llama al metodo actionGet(), y almacena el resultado
                     return json.dumps(result)  # Parsea el diccionario result a formato json
