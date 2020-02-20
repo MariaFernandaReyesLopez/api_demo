@@ -5,6 +5,8 @@ import json  # json parser
 '''
     Controller Alumnos que es invocado cuando el usuario ingrese a la 
     URL: http://localhost:8080/alumnos?action=get&token=1234
+    Controller Alumnos que es invocado cuando el usuario ingrese a la 
+    URL: http://localhost:8080/alumnos?action=search&token=1234&matricula=171811
 '''
 
 
