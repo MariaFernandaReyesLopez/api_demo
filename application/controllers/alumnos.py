@@ -10,7 +10,7 @@ import json  # json parser
 
 class Alumnos:
 
-    app_version = "0.02"  # version de la webapp
+    app_version = "0.03"  # version de la webapp
     file = 'static/csv/alumnos.csv'  # define el archivo donde se almacenan los datos
 
     def __init__(self):  # Método inicial o constructor de la clase
