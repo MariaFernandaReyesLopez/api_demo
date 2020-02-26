@@ -2,7 +2,7 @@ import web  # pip install web.py
 
 urls = (
     '/alumnos/?', 'application.controllers.alumnos.Alumnos',
-    '/put/?', 'application.controllers.put.Alumnos'
+    '/delete/?', 'application.controllers.delete.Alumnos'
 )
 app = web.application(urls, globals())
 
