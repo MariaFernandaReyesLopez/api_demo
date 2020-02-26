@@ -7,12 +7,14 @@ import json  # json parser
     URL: http://localhost:8080/alumnos?action=get&token=1234
     Controller Alumnos que es invocado cuando el usuario ingrese a la 
     URL: http://localhost:8080/alumnos?action=search&token=1234&matricula=171811
+    Controller Alumnos que es invocado cuando el usuario ingrese a la 
+    URL: http://localhost:8080/alumnos?action=put&token=1234&matricula=171811&nombre=name&primer_apellido=lastname&segundo_apellido=2nd-lastname&carrera=major
 '''
 
 
 class Alumnos:
 
-    app_version = "0.2.0"  # 1er version de la webapp
+    app_version = "0.3.0"  # 3er version de la webapp
     file = 'static/csv/alumnos.csv'  # define el archivo donde se almacenan los datos
 
     def __init__(self):  # Método inicial o constructor de la clase
@@ -43,6 +45,14 @@ class Alumnos:
                     alumno.append(carrera)
                     result = self.actionPut(self.app_version, self.file, alumno)
                     return json.dumps(result)
+                elif data['action'] == 'delete':
+                    
+                    result = self.actionDelete(self.app_version, self.file)
+                    return json.dumps(result)
+                elif data['action'] == 'update':
+                    
+                    result = self.actionUpdate(self.app_version, self.file)
+                    return json.dumps(result)
 
                 elif data['action'] == 'help':
                     result = {}  # crear diccionario vacio
@@ -50,6 +60,9 @@ class Alumnos:
                     result['status'] = "200 ok"  # mensaje de status
                     result['get']= "?action=get&token=XXXX"
                     result['search'] = "?action=search&token=XXXX&matricula=XXXX"
+                    result['put'] = "?action=search&token=XXXX&matricula=XXXX&nombre=nombre&primer_apellido=apellido&segundo_apellido=apellido2&carrera=namecarrera"
+                    result['delete'] = "?action=search&token=XXXX&matricula=XXXX"
+                    result['update'] = "?action=search&token=XXXX&matricula=XXXX"
                     return json.dumps(result)
                 else:
                     result = {}  # crear diccionario vacio
@@ -133,7 +146,7 @@ class Alumnos:
 
             with open(file, 'a+', newline='') as csvfile: 
                 writer = csv.writer(csvfile)  
-                writer.writerow(result)
+                writer.writerow(alumno)
 
             with open(file, 'r') as csvfile: 
                 reader = csv.DictReader(csvfile)  
@@ -153,4 +166,58 @@ class Alumnos:
             print("Error {}".format(e.args))
             result['app_version'] = app_version 
             result['status'] = "Error " 
-            return result  
+            return result
+
+    @staticmethod
+    def actionDelete(app_version, file):
+        try:
+            result = {} 
+            result['app_version'] = app_version  
+            result['status'] = "200 ok"  
+
+            with open(file, 'r') as csvfile: 
+                reader = csv.DictReader(csvfile)  
+                alumnos = []
+                for row in reader:  
+                    fila = {}  
+                    fila['matricula'] = row['matricula']  
+                    fila['nombre'] = row['nombre'] 
+                    fila['primer_apellido'] = row['primer_apellido']  
+                    fila['segundo_apellido'] = row['segundo_apellido']  
+                    fila['carrera'] = row['carrera'] 
+                    alumnos.append(fila)  
+                result['alumnos'] = alumnos  
+            return result 
+        except Exception as e:
+            result = {}  
+            print("Error {}".format(e.args))
+            result['app_version'] = app_version 
+            result['status'] = "Error " 
+            return result
+   
+    @staticmethod
+    def actionUpdate(app_version, file):
+        try:
+            result = {} 
+            result['app_version'] = app_version  
+            result['status'] = "200 ok"  
+
+            with open(file, 'r') as csvfile: 
+                reader = csv.DictReader(csvfile)  
+                alumnos = []
+                for row in reader:  
+                    fila = {}  
+                    fila['matricula'] = row['matricula']  
+                    fila['nombre'] = row['nombre'] 
+                    fila['primer_apellido'] = row['primer_apellido']  
+                    fila['segundo_apellido'] = row['segundo_apellido']  
+                    fila['carrera'] = row['carrera'] 
+                    alumnos.append(fila)  
+                result['alumnos'] = alumnos  
+            return result 
+        except Exception as e:
+            result = {}  
+            print("Error {}".format(e.args))
+            result['app_version'] = app_version 
+            result['status'] = "Error " 
+            return result
