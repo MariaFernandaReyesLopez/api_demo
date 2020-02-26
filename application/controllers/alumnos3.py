@@ -1,24 +1,3 @@
-
-               
-                elif data['action'] == 'put'
-                    matricula = int(data['matricula'])
-                    nombre = str(data['nombre'])
-                    primer_apellido = str(data['primer_apellido'])
-                    segundo_apellido = str(data['segundo_apellido'])
-                    carrera = str(data['carrera'])
-
-
-
-                elif data['action'] == 'put':
-                    matricula = int(data['matricula'])
-                    nombre = str(data['nombre'])
-                    primer_apellido = str(data['primer_apellido'])
-                    segundo_apellido = str(data['segundo_apellido'])
-                    carrera = str(data['carrera'])
-                    result = self.actionPut(self.app_version, self.file)
-
-
-
 @staticmethod
     def actionPut(app_version, file):
         try:

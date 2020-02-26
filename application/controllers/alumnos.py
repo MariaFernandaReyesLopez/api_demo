@@ -29,6 +29,20 @@ class Alumnos:
                     matricula = data['matricula']
                     result = self.actionSearch(self.app_version, self.file, matricula)  
                     return json.dumps(result)
+                elif data['action'] == 'put':
+                    matricula = int(data['matricula'])
+                    nombre = str(data['nombre'])
+                    primer_apellido = str(data['primer_apellido'])
+                    segundo_apellido = str(data['segundo_apellido'])
+                    carrera = str(data['carrera'])
+                    alumno=[]
+                    alumno.append(matricula)
+                    alumno.append(nombre)
+                    alumno.append(primer_apellido)
+                    alumno.append(segundo_apellido)
+                    alumno.append(carrera)
+                    result = self.actionPut(self.app_version, self.file, alumno)
+                    return json.dumps(result)
 
                 elif data['action'] == 'help':
                     result = {}  # crear diccionario vacio
@@ -109,3 +123,34 @@ class Alumnos:
             result['app_version'] = app_version  
             result['status'] = "Error "  
             return result 
+
+    @staticmethod
+    def actionPut(app_version, file, alumno):
+        try:
+            result = {} 
+            result['app_version'] = app_version  
+            result['status'] = "200 ok"  
+
+            with open(file, 'a+', newline='') as csvfile: 
+                writer = csv.writer(csvfile)  
+                writer.writerow(result)
+
+            with open(file, 'r') as csvfile: 
+                reader = csv.DictReader(csvfile)  
+                alumnos = []
+                for row in reader:  
+                    fila = {}  
+                    fila['matricula'] = row['matricula']  
+                    fila['nombre'] = row['nombre'] 
+                    fila['primer_apellido'] = row['primer_apellido']  
+                    fila['segundo_apellido'] = row['segundo_apellido']  
+                    fila['carrera'] = row['carrera'] 
+                    alumnos.append(fila)  
+                result['alumnos'] = alumnos  
+            return result 
+        except Exception as e:
+            result = {}  
+            print("Error {}".format(e.args))
+            result['app_version'] = app_version 
+            result['status'] = "Error " 
+            return result  
