@@ -12,7 +12,7 @@ import json  # json parser
 
 class Alumnos:
 
-    app_version = "0.1.0"  # 1er version de la webapp
+    app_version = "0.2.0"  # 1er version de la webapp
     file = 'static/csv/alumnos.csv'  # define el archivo donde se almacenan los datos
 
     def __init__(self):  # Método inicial o constructor de la clase
@@ -25,6 +25,18 @@ class Alumnos:
                 if data['action'] == 'get':  # evalua la acción a realizar
                     result = self.actionGet(self.app_version, self.file)  # llama al metodo actionGet(), y almacena el resultado
                     return json.dumps(result)  # Parsea el diccionario result a formato json
+                elif data['action'] == 'search':
+                    matricula = data['matricula']
+                    result = self.actionSearch(self.app_version, self.file, matricula)  
+                    return json.dumps(result)
+
+                elif data['action'] == 'help':
+                    result = {}  # crear diccionario vacio
+                    result['app_version'] = self.app_version  # version de la webapp
+                    result['status'] = "200 ok"  # mensaje de status
+                    result['get']= "?action=get&token=XXXX"
+                    result['search'] = "?action=search&token=XXXX&matricula=XXXX"
+                    return json.dumps(result)
                 else:
                     result = {}  # crear diccionario vacio
                     result['app_version'] = self.app_version  # version de la webapp
@@ -48,7 +60,7 @@ class Alumnos:
             result = {}  # crear diccionario vacio
             result['app_version'] = app_version  # version de la webapp
             result['status'] = "200 ok"  # mensaje de status
-            
+                
             with open(file, 'r') as csvfile:  # abre el archivo en modo lectura
                 reader = csv.DictReader(csvfile)  # toma la 1er fila para los nombres
                 alumnos = []  # array para almacenar todos los alumnos
@@ -68,3 +80,32 @@ class Alumnos:
             result['app_version'] = app_version  # version de la webapp
             result['status'] = "Error "  # mensaje de status
             return result  # Regresa el diccionario generado
+
+
+    @staticmethod
+    def actionSearch(app_version, file, matricula):
+        try:
+            result = {}  
+            result['app_version'] = app_version  
+            result['status'] = "200 ok"  
+
+            with open(file, 'r') as csvfile:  
+                reader = csv.DictReader(csvfile)  
+                alumnos = []  
+                for row in reader:  
+                    if row['matricula'] == matricula:
+                        fila = {}  
+                        fila['matricula'] = row['matricula'] 
+                        fila['nombre'] = row['nombre']  
+                        fila['primer_apellido'] = row['primer_apellido']  
+                        fila['segundo_apellido'] = row['segundo_apellido']  
+                        fila['carrera'] = row['carrera']  
+                        alumnos.append(fila) 
+                result['alumnos'] = alumnos  
+            return result  
+        except Exception as e:
+            result = {}  
+            print("Error {}".format(e.args))
+            result['app_version'] = app_version  
+            result['status'] = "Error "  
+            return result 
