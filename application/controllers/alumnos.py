@@ -47,7 +47,7 @@ class Alumnos:
                     return json.dumps(result)
                 elif data['action'] == 'delete':
                     matricula = data['matricula']
-                    result = self.actionDelete(self.app_version, self.file, matricula) 
+                    result = self.actionDelete(self.app_version,self.file, matricula)
                     return json.dumps(result)
                 elif data['action'] == 'update':
                     
@@ -167,37 +167,53 @@ class Alumnos:
             result['app_version'] = app_version 
             result['status'] = "Error " 
             return result
-
+   
     @staticmethod
     def actionDelete(app_version, file, matricula):
         try:
-            result = {} 
-            result['app_version'] = app_version  
-            result['status'] = "200 ok"  
+            result = {}  # crear diccionario vacio
+            result['app_version'] = app_version  # version de la webapp
+            result['status'] = "200 ok"
 
-            with open(file, 'r') as csvfile: 
-                reader = csv.DictReader(csvfile)  
-                alumnos = []
-                for row in reader:  
-                    fila = {}  
-                    fila['matricula'] = row['matricula']  
-                    fila['nombre'] = row['nombre'] 
-                    fila['primer_apellido'] = row['primer_apellido']  
-                    fila['segundo_apellido'] = row['segundo_apellido']  
-                    fila['carrera'] = row['carrera'] 
-                    alumnos.append(fila)  
-                    for i in range(len(alumnos)):
-                        if alumnos[i]['matricula'] == matricula:
-                            del alumnos[i] 
-                result['alumnos'] = alumnos 
-            return result 
+            with open(file, 'r') as csvfile:
+                reader = csv.DictReader(csvfile)
+                alumno = []
+                for row in reader:
+                    if (row['matricula'] != matricula):
+                        alumno.append(row)
+                        result['alumno'] = row
+            tam = (len(alumno))
+            with open(file,'w',newline='') as csvfile:
+                writer=csv.writer(csvfile)
+                alumn1=[]
+                alumn1.append("matricula")
+                alumn1.append("nombre")
+                alumn1.append("primer_apellido")
+                alumn1.append("segundo_apellido")
+                alumn1.append("carrera")
+                writer.writerow(alumn1)
+                data=[]
+                for i in range(0,tam):
+                    data.append(alumno[i]['matricula'])
+                    data.append(alumno[i]['nombre'])
+                    data.append(alumno[i]['primer_apellido'])
+                    data.append(alumno[i]['segundo_apellido'])
+                    data.append(alumno[i]['carrera'])
+                    writer.writerow(data)
+                    data=[]
+
+            with open(file,'r') as csvfile:
+                reader = csv.DictReader(csvfile)
+                for row in reader:
+                    alumno.append(row)
+                    result['alumno']=alumno
+            return result
         except Exception as e:
-            result = {}  
+            result = {} 
             print("Error {}".format(e.args))
-            result['app_version'] = app_version 
+            result['app_version'] = app_version  
             result['status'] = "Error " 
             return result
-
    
     @staticmethod
     def actionUpdate(app_version, file):
