@@ -9,6 +9,8 @@ import json  # json parser
     URL: http://localhost:8080/alumnos?action=search&token=1234&matricula=171811
     Controller Alumnos que es invocado cuando el usuario ingrese a la 
     URL: http://localhost:8080/alumnos?action=put&token=1234&matricula=171811&nombre=name&primer_apellido=lastname&segundo_apellido=2nd-lastname&carrera=major
+    Controller Alumnos que es invocado cuando el usuario ingrese a la 
+    URL: http://localhost:8080/alumnos?action=delete&token=1234&matricula=171811
 '''
 
 
