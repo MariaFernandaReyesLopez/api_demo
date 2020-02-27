@@ -14,7 +14,7 @@ import json  # json parser
 
 class Alumnos:
 
-    app_version = "0.3.0"  # 3er version de la webapp
+    app_version = "0.4.0"  # 4ta version de la webapp
     file = 'static/csv/alumnos.csv'  # define el archivo donde se almacenan los datos
 
     def __init__(self):  # Método inicial o constructor de la clase
@@ -46,8 +46,8 @@ class Alumnos:
                     result = self.actionPut(self.app_version, self.file, alumno)
                     return json.dumps(result)
                 elif data['action'] == 'delete':
-                    
-                    result = self.actionDelete(self.app_version, self.file)
+                    matricula = data['matricula']
+                    result = self.actionDelete(self.app_version, self.file, matricula) 
                     return json.dumps(result)
                 elif data['action'] == 'update':
                     
@@ -169,7 +169,7 @@ class Alumnos:
             return result
 
     @staticmethod
-    def actionDelete(app_version, file):
+    def actionDelete(app_version, file, matricula):
         try:
             result = {} 
             result['app_version'] = app_version  
@@ -186,7 +186,10 @@ class Alumnos:
                     fila['segundo_apellido'] = row['segundo_apellido']  
                     fila['carrera'] = row['carrera'] 
                     alumnos.append(fila)  
-                result['alumnos'] = alumnos  
+                    for i in range(len(alumnos)):
+                        if alumnos[i]['matricula'] == matricula:
+                            del alumnos[i] 
+                result['alumnos'] = alumnos 
             return result 
         except Exception as e:
             result = {}  
@@ -194,6 +197,7 @@ class Alumnos:
             result['app_version'] = app_version 
             result['status'] = "Error " 
             return result
+
    
     @staticmethod
     def actionUpdate(app_version, file):

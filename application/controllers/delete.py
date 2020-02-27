@@ -15,18 +15,8 @@ class Alumnos:
             data = web.input()  # recibe los datos por la url
             if data['token'] == "2468":  # valida el token que se recibe por url
                 if data['action'] == 'delete':
-                    alumnos1 = []
-                    dele_matricula = data['matricula']
-                    if row['matricula'] == matricula:
-                        fila_del = {}  
-                        fila_del['matricula'] = row['matricula'] 
-                        fila_del['nombre'] = row['nombre']  
-                        fila_del['primer_apellido'] = row['primer_apellido']  
-                        fila_del['segundo_apellido'] = row['segundo_apellido']  
-                        fila_del['carrera'] = row['carrera']  
-                        alumnos1.append(fila_del) 
-                        del (alumnos1)
-                    result = self.actionSearch(self.app_version, self.file, dele_matricula)  
+                    matricula = data['matricula']
+                    result = self.actionDelete(self.app_version, self.file, matricula) 
                     return json.dumps(result)
                 
                 elif data['action'] == 'help':
@@ -61,12 +51,11 @@ class Alumnos:
 
 
     @staticmethod
-    def actionDelete(app_version, file, matricula, dele_matricula):
+    def actionDelete(app_version, file, matricula):
         try:
             result = {} 
             result['app_version'] = app_version  
             result['status'] = "200 ok"  
-
 
             with open(file, 'r') as csvfile: 
                 reader = csv.DictReader(csvfile)  
@@ -79,7 +68,10 @@ class Alumnos:
                     fila['segundo_apellido'] = row['segundo_apellido']  
                     fila['carrera'] = row['carrera'] 
                     alumnos.append(fila)  
-                result['alumnos'] = alumnos  
+                    for i in range(len(alumnos)):
+                        if alumnos[i]['matricula'] == matricula:
+                            del alumnos[i] 
+                result['alumnos'] = alumnos 
             return result 
         except Exception as e:
             result = {}  
